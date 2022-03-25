@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-7 col-lg-12 col-md-9">
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-body p-0">
+                            <div class="row justify-content-center">
+
+                                <div class="col-lg-6">
+                                    <div class="p-5">
+                                        <div class="text-left mb-5">
+                                            <h1 class="h4 text-gray-900 mb-1"> Parcelas das despesas do mês {{ mes }} Geradas!</h1>
+
+                                            <p>Clique no botão abaixo para ver as parcelas</p>
+                                        </div>
+
+                                        <a href="{% url 'index' %}admin/financeiro/despesa/{{ despesa_id }}/change/" class="btn btn-primary btn-user btn-block">
+                                            <span class="text">Voltar para Despesas</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock conteudo %}

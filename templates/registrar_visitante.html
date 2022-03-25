@@ -1,0 +1,147 @@
+{% extends "index.html" %}
+{% load widget_tweaks %}
+{% block conteudo %}
+
+<!--    <div class="container"> -->
+
+   {% if messages    %}
+     {% for mensagem in messages    %}
+        <div class="alert alert-success" role="alert">
+          {{ mensagem }}
+        </div>
+     {% endfor %}
+   {% endif %}
+
+
+    <div class="row">
+
+      <div class="col-md-6">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{ nome_pagina }}</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form"  method="post" >
+              <div class="box-body">
+
+                <div class="form-row">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                        <div class="form-group col-md-12">
+                            <label> {{ field.label }} {% if field.field.required %} * {% endif %}  </label>
+                            {% render_field field placeholder=field.label class="form-control" %}
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+              </div>
+              <!-- /.box-body -->
+
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+              <!-- /.box -->
+      </div>
+
+      <div class="col-md-6">
+
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Bordered Table</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table class="table table-bordered">
+                <tr>
+                  <th style="width: 10px">#</th>
+                  <th>Task</th>
+                  <th>Progress</th>
+                  <th style="width: 40px">Label</th>
+                </tr>
+                {% for visitante in todos_visitantes %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ visitante.nome_completo }}</td>
+                  <td>{{ visitante.cpf }}</td>
+                  <td>{{ visitante.horario_chegada|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                  <td>1.</td>
+                  <td>Update software</td>
+                  <td>
+                    <div class="progress progress-xs">
+                      <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                    </div>
+                  </td>
+                  <td><span class="badge bg-red">55%</span></td>
+                </tr>
+              </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+              <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="#">&laquo;</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">&raquo;</a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- /.box -->
+
+
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Visitantes Hover Data Table</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>Nome completo</th>
+                  <th>CPF</th>
+                  <th>Chegada</th>
+                  <th>Hora Autorização</th>
+                  <th>Responsavel</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for visitante in todos_visitantes %}
+                <tr>
+                  <td>{{ visitante.nome_completo }}</td>
+                  <td>{{ visitante.cpf }}</td>
+                  <td>{{ visitante.horario_chegada|date:"d/m/Y" }}</td>
+                  <td>{{ visitante.horario_autorizacao }}</td>
+                  <td>{{ visitante.morador_responsavel }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                  <th>Rendering engine</th>
+                  <th>Browser</th>
+                  <th>Platform(s)</th>
+                  <th>Engine version</th>
+                  <th>CSS grade</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+
+
+      </div>
+
+
+    </div>
+{% endblock conteudo %}

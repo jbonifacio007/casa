@@ -1,0 +1,1 @@
+web: gunicorn casapraia.wsgi --log-file -
