@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-s+1$xk5^_!^yo%jr1496s)@wsbz7ogfbnqrfp!p#q3&$$9noud'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+#DEBUG = True
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
@@ -145,18 +145,30 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+"""
+STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+"""
 
+STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
-MEDIA_ROOT = BASE_DIR / 'media'
-
 STATICFILES_DIRS = [
     BASE_DIR / 'casapraia/static',
 ]
 
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+
+"""
+STATIC_ROOT = BASE_DIR / 'static'
+MEDIA_ROOT = BASE_DIR / 'media'
+"""
+
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
+
 
 
 # Default primary key field type
