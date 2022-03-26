@@ -90,8 +90,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-"""
-"""
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -102,8 +102,8 @@ DATABASES = {
     }
 }
 
-
 """
+
 # PRODUCAO
 DATABASES = {
     'default': dj_database_url.config()
@@ -144,27 +144,28 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-
 """
+
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'casapraia/static',
+]
+
 """
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
-    BASE_DIR / 'casapraia/static',
+    BASE_DIR / 'static',
 ]
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
-"""
-STATIC_ROOT = BASE_DIR / 'static'
-MEDIA_ROOT = BASE_DIR / 'media'
-"""
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
