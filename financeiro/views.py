@@ -78,8 +78,12 @@ def gerardespesaparcela(request, despesa_id):
             mes_anterior = 12
 
 
+    valorTotalFinal = valorTotal
+    valorTotal = valorTotal - valorVar
+
     valorVar = (valorVar / 30)
-    valor = (valorTotal / 10)
+
+
 
 
     dataatual = datetime.datetime.now()
@@ -98,6 +102,18 @@ def gerardespesaparcela(request, despesa_id):
 
     membros_aux = membros_qry
 
+
+
+    quant_membros = 0
+
+    for cq in membros_qry:
+        quant_membros = quant_membros + 1
+
+
+    if quant_membros > 0:
+        valor = (valorTotal / quant_membros)
+
+
     valorvariaveis = 0
 
     with connection.cursor() as cursor:
@@ -109,14 +125,15 @@ def gerardespesaparcela(request, despesa_id):
                qtd_membros_dias = qtd_membros_dias + 1
                valores = []
                for d in range(m.dias):   #Percorre os dias e compara com os outros membros
-
-                   qtd = 1
+                   qtd = 0
                    for a in membros_aux:
                        if a.id != m.id:  #Verifica se é um membro difente do atual do loop 'm'
+
                            if a.dias > d+1:
                               qtd = qtd + 1
 
                    valores.append({d:qtd})  #Preenche o dicionário a quantidade de membros a ser dividido de cada dia
+
 
                j = 0
                valor_parcela = 0
@@ -130,13 +147,13 @@ def gerardespesaparcela(request, despesa_id):
 
                membro_id = (m.id)
 
-               valorfinal = (valor - valorVar) + valor_parcela
+               valorfinal = valor + valor_parcela
 
                valorvariaveis = valorvariaveis + valorfinal
 
                cursor.execute("INSERT INTO financeiro_despesaparcela (despesa_id, membro_id, valor, criado, modificado, pago, datapagamento) VALUES (%s, %s, %s, %s, %s, %s, %s)", [despesa_id, membro_id,valorfinal,dataatual,dataatual,False,dataatual])
 
-        valorfinal = (valorTotal - valorvariaveis) / (10 - qtd_membros_dias)
+        valorfinal = (valorTotalFinal - valorvariaveis) / (quant_membros - qtd_membros_dias)
 
         for m in membros_qry:
             membro_id = (m.id)

@@ -91,6 +91,8 @@ DATABASES = {
     }
 }
 
+"""
+"""
 
 DATABASES = {
     'default': {
@@ -108,7 +110,6 @@ DATABASES = {
 DATABASES = {
     'default': dj_database_url.config()
 }
-
 
 
 # Password validation
