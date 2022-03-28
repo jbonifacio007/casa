@@ -147,7 +147,10 @@ def gerardespesaparcela(request, despesa_id):
 
                membro_id = (m.id)
 
-               valorfinal = valor + valor_parcela
+
+               val_dias_resto = (valorVar / quant_membros) *  (30 - m.dias)
+
+               valorfinal = valor + valor_parcela + val_dias_resto
 
                valorvariaveis = valorvariaveis + valorfinal
 
