@@ -18,9 +18,11 @@ def gerarparcela(request, parcelamento_id):
     membros = Membro.objects.all().filter(temporario=False)
     parcelamento = Parcelamento.objects.all().filter(id=parcelamento_id)
 
+
     for p in parcelamento:
         valor = (p.valor)
         vencimento = (p.vencimento)
+        descricao = p.descricao
 
     valor = (valor / 10)
 
@@ -41,11 +43,19 @@ def gerarparcela(request, parcelamento_id):
            cursor.execute("INSERT INTO financeiro_parcela (parcelamento_id, membro_id, numero, vencimento, valor, criado, modificado, pago) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", [parcelamento_id, membro_id,numero_parcela,dataatual,valor,datetime.datetime.now(),datetime.datetime.now(), False])
 
 
-    retorno = f'Despesa: {parcelamento_id} - {valor}'
+ #   retorno = f'Despesa: {parcelamento_id} - {valor}'
 
 #    return redirect( " url '/admin/financeiro/parcela/' ")
-    return HttpResponse(retorno )
+#    return HttpResponse(retorno )
 
+    context = {
+        "nome_pagina": "parcelamento",
+        "todas_reservas": parcelamento,
+        "despesa_id": parcelamento_id,
+        "mes": descricao,
+
+    }
+    return render(request, "geracaoparcela.html", context)
 
 def gerardespesaparcela(request, despesa_id):
 
@@ -188,7 +198,7 @@ def gerardespesaparcela(request, despesa_id):
 
 
     context = {
-        "nome_pagina": "Calendario",
+        "nome_pagina": "despesa",
         "todas_reservas": retorno,
         "despesa_id": despesa_id,
         "mes": mes,

@@ -11,14 +11,21 @@
                                 <div class="col-lg-6">
                                     <div class="p-5">
                                         <div class="text-left mb-5">
-                                            <h1 class="h4 text-gray-900 mb-1"> Parcelas das despesas do mês {{ mes }} Geradas!</h1>
+                                            <h1 class="h4 text-gray-900 mb-1"> Parcelas do(a) {{ nome_pagina }}  {{ mes }} geradas!</h1>
 
                                             <p>Clique no botão abaixo para ver as parcelas</p>
                                         </div>
-
+                                        {% if  nome_pagina == 'Despesas'  %}
                                         <a href="{% url 'index' %}admin/financeiro/despesa/{{ despesa_id }}/change/" class="btn btn-primary btn-user btn-block">
                                             <span class="text">Voltar para Despesas</span>
                                         </a>
+                                        {% endif %}
+                                        {% if  nome_pagina  == 'Parcelamento'  %}
+                                        <a href="{% url 'index' %}admin/financeiro/parcelamento/{{ despesa_id }}/change/" class="btn btn-primary btn-user btn-block">
+                                            <span class="text">Voltar para Parcelamento</span>
+                                        </a>
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>
