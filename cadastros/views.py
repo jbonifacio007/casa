@@ -8,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def index(request):
 
-    todos_visitantes = Membro.objects.all()
+    todos_visitantes = Membro.objects.raw('	SELECT * FROM cadastros_membro where temporario = False ')
+
+
     todas_reservas = Reserva.objects.all()
 
     membros_qry = Membro.objects.raw(
