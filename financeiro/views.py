@@ -98,7 +98,7 @@ def gerardespesaparcela(request, despesa_id):
         '       and extract(month from data_inicio) =  ' + str(mes_anterior) + ' '  
         '   where temporario = False '
         ') T '
-        'group by id,nome order by nome')
+        'group by id,nome order by dias desc')
 
     membros_aux = membros_qry
 
@@ -120,16 +120,17 @@ def gerardespesaparcela(request, despesa_id):
 
         cursor.execute("DELETE from financeiro_despesaparcela WHERE despesa_id = %s", [despesa_id])
         valorfinal = 0
+        quant_dias_ant = 0
+
         for m in membros_qry:
             if m.dias > 0:
                qtd_membros_dias = qtd_membros_dias + 1
                valores = []
                for d in range(m.dias):   #Percorre os dias e compara com os outros membros
-                   qtd = 0
+                   qtd = 1
                    for a in membros_aux:
                        if a.id != m.id:  #Verifica se é um membro difente do atual do loop 'm'
-
-                           if a.dias > d+1:
+                           if a.dias >= d+1:
                               qtd = qtd + 1
 
                    valores.append({d:qtd})  #Preenche o dicionário a quantidade de membros a ser dividido de cada dia
@@ -137,6 +138,9 @@ def gerardespesaparcela(request, despesa_id):
 
                j = 0
                valor_parcela = 0
+
+
+
                for v in valores:
 
                    if v[j] != 0:
@@ -148,7 +152,13 @@ def gerardespesaparcela(request, despesa_id):
                membro_id = (m.id)
 
 
-               val_dias_resto = (valorVar / quant_membros) *  (30 - m.dias)
+               dias_para_subtrair = 0
+               if quant_dias_ant > 0:
+                  dias_para_subtrair = 30 - quant_dias_ant
+               else:
+                  dias_para_subtrair = (30 - m.dias)
+
+               val_dias_resto = (valorVar / quant_membros) * dias_para_subtrair
 
                valorfinal = valor + valor_parcela + val_dias_resto
 
@@ -156,8 +166,12 @@ def gerardespesaparcela(request, despesa_id):
 
                cursor.execute("INSERT INTO financeiro_despesaparcela (despesa_id, membro_id, valor, criado, modificado, pago, datapagamento) VALUES (%s, %s, %s, %s, %s, %s, %s)", [despesa_id, membro_id,valorfinal,dataatual,dataatual,False,dataatual])
 
-        valorfinal = (valorTotalFinal - valorvariaveis) / (quant_membros - qtd_membros_dias)
+            quant_dias_ant = m.dias
 
+        if (quant_membros - qtd_membros_dias) > 0:
+            valorfinal = (valorTotalFinal - valorvariaveis) / (quant_membros - qtd_membros_dias)
+        else:
+            valorfinal = (valorTotalFinal - valorvariaveis) / (quant_membros)
         for m in membros_qry:
             membro_id = (m.id)
 
