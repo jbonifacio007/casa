@@ -78,7 +78,7 @@ class DespesaAdmin(admin.ModelAdmin):
     ]
 
 
-    list_display = ['mes','ano','total','gerar']
+    list_display = ['__str__','total','gerar']
     exclude = ['usuario']
     readonly_fields = ('total',)
 
