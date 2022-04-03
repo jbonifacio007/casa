@@ -50,6 +50,13 @@ class Despesa(Base):
 
 #            """<a href=\"/gerarparcela/\" target="_blank"> Gerar </a>""" )
 
+
+    def clean(self):
+
+        if self.mes <= 0 or self.mes > 12:
+            raise ValidationError({'mes': ('Mês inválido!')})
+
+
     class Meta:
         verbose_name = 'Despesa'
         verbose_name_plural = 'Despesas'
@@ -73,8 +80,15 @@ class DespesaItem(Base):
 
     def clean(self):
 
+        if self.id:
+            tipodespesa_id_banco = pegaIdTipoDespesaBanco(self.id)
+
         if not(self.despesa.id):
             raise ValidationError({'descricao': ('Despesa Ainda Não Gravada!')})
+
+        if not(self.id) or ((self.id) and not(tipodespesa_id_banco == self.tipodespesa.id) ):
+            if validaItemDespesa(self.despesa.id,self.tipodespesa.id):
+                raise ValidationError("Depesa Já existe nesse mês!")
 
 
     class Meta:
@@ -145,4 +159,28 @@ class Parcela(Base):
 
 
 
+
+def validaItemDespesa(despesa_id,tipodespesa_id):
+    itemdespesa_qry = DespesaItem.objects.raw(
+        "Select row_number() OVER (PARTITION by 0)  id, count(*) qtd "
+        "FROM financeiro_despesaitem WHERE despesa_id = %s and tipodespesa_id = %s ",[despesa_id, tipodespesa_id])
+
+    for p in itemdespesa_qry:
+        qtd = (p.qtd)
+
+    valor = False
+    if not(qtd==0):
+        valor = True
+    return valor
+
+
+def pegaIdTipoDespesaBanco(id):
+    itemdespesa_qry = DespesaItem.objects.raw(
+        "select row_number() OVER (PARTITION by 0)  id, tipodespesa_id "
+        "FROM financeiro_despesaitem WHERE id = %s ",[id])
+
+    for p in itemdespesa_qry:
+        tipodespesa_id = (p.tipodespesa_id)
+
+    return tipodespesa_id
 
