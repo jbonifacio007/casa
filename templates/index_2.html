@@ -47,6 +47,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
 
+  <link href="{% static 'lib/main.css'%}" rel='stylesheet'  >
 
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -282,7 +283,7 @@ desired effect
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
         <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Index Grande</span></a></li>
-        <li><a href="#"><i class="fa fa-link"></i> <span>Registrar Visitantes</span></a></li>
+        <li><a href="{% url 'incluir_reserva' %}"><i class="fa fa-link"></i> <span>Incluir Reserva</span></a></li>
         <li><a href="#"><i class="fa fa-link"></i> <span>Avançados</span></a></li>
         <li><a href="#"><i class="fa fa-link"></i> <span>General</span></a></li>
         <li class="treeview">
@@ -543,14 +544,20 @@ desired effect
 <script src="{% static 'plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
 <!-- iCheck 1.0.1 -->
 <script src="{% static 'plugins/iCheck/icheck.min.js' %}"></script>
-<!-- FastClick -->
-<script src="{% static 'plugins/fastclick/fastclick.js' %}"></script>
-<!-- AdminLTE App -->
-<script src="{% static 'dist/js/app.min.js' %}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{% static 'dist/js/demo.js' %}"></script>
+
+
+<!-- bootstrap datepicker  Local-->
+<script src="{% static 'plugins/datepicker/locales/bootstrap-datepicker.pt-BR.js' %}"></script>
+
 
 <!-- page script -->
+
+
+
+        <script src="{% static 'lib/main.js' %}"></script>
+        <script src="{% static 'lib/locales-all.js' %}"></script>
+
+
 <script>
 
   $(function () {
@@ -601,7 +608,9 @@ desired effect
 
     //Date picker
     $('#datepicker').datepicker({
-      autoclose: true
+      autoclose: true,
+      format:'dd/mm/yyyy',
+      language:'pt-BR',
     });
 
     //iCheck for checkbox and radio inputs
@@ -631,6 +640,30 @@ desired effect
     });
   });
 
+          document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                events:[
+                    {% for reserva in todas_reservas  %}
+                        {
+                            title: '{{ reserva.membro.nome }}',
+                            start: '{{ reserva.data_inicio | date:"Y-m-d" }}',
+                            end: '{{ reserva.data_final | date:"Y-m-d" }}',
+                            backgroundColor: '{{ reserva.membro.cor }}',
+                            borderColor: '{{ reserva.membro.cor }}',
+                            textColor: '{{ reserva.membro.corTexto }}',
+                        },
+
+
+                    {% endfor  %}
+
+
+                ],
+
+            });
+            calendar.render();
+            calendar.setOption('locale','pt-br');
+          });
 
 
 </script>

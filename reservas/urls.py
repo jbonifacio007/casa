@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import calendario
+from .views import calendario,incluir_reserva
 
 urlpatterns = [
     path(
@@ -8,7 +8,11 @@ urlpatterns = [
         name="calendario"
 
     ),
+    path(
+        "incluir_reserva/",
+        incluir_reserva,
+        name="incluir_reserva"
 
-
+    ),
 
 ]

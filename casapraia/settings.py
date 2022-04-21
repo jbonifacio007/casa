@@ -93,7 +93,6 @@ DATABASES = {
 
 """
 """
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -110,6 +109,7 @@ DATABASES = {
 DATABASES = {
     'default': dj_database_url.config()
 }
+
 
 
 # Password validation
