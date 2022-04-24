@@ -45,8 +45,9 @@ class Despesa(Base):
     usuario = models.ForeignKey(get_user_model(), verbose_name='Usuário',on_delete=models.RESTRICT)
 
     def gerar(self):
-        return mark_safe(
-            """<a href=\"/gerardespesaparcela/%s/\" target="_blank"> Gerar </a>""" % self.id)
+        if not(self.total == 0):
+            return mark_safe(
+                """<a href=\"/gerardespesaparcela/%s/\" target="_blank"> Gerar </a>""" % self.id)
 
 #            """<a href=\"/gerarparcela/\" target="_blank"> Gerar </a>""" )
 
@@ -74,8 +75,9 @@ class DespesaItem(Base):
     usuario = models.ForeignKey(get_user_model(), verbose_name='Usuário',on_delete=models.RESTRICT)
 
     def gerar(self):
-        return mark_safe(
-            """<a href=\"/proposta/%s/\" target="_blank"> Gerar </a>""" % self.id)
+        if not(self.valor == 0):
+            return mark_safe(
+                """<a href=\"/proposta/%s/\" target="_blank"> Gerar </a>""" % self.id)
 
 
     def clean(self):

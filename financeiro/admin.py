@@ -4,7 +4,7 @@ from django.db import connection
 from . import models
 from django.contrib.admin.views.main import ChangeList
 from django.db.models import Sum, Avg
-
+from django.utils.html import format_html
 # Register your models here.
 
 
@@ -78,10 +78,24 @@ class DespesaAdmin(admin.ModelAdmin):
     ]
 
 
-    list_display = ['__str__','total','gerar']
+    list_display = ['__str__','total','gerar','status']
     exclude = ['usuario']
     readonly_fields = ('total',)
 
+
+    def status(self, obj):
+        vStatus = ''
+        vGerado = SomaDespesas(obj.id)
+        if vGerado == 1:
+            color = 'green'
+            vStatus = 'Gerado'
+        elif vGerado == 2:
+            color = 'red'
+            vStatus = 'Precisa Gerar'
+        else:
+            vStatus = 'Gerando'
+            color = 'orange'
+        return format_html('<strong><p style="color: {}">{}</p></strong>'.format(color, vStatus))
 
     id_despesa = 0
 
@@ -109,6 +123,32 @@ class ParcelaAdmin(admin.ModelAdmin):
     list_editable = ['numero','pago']
 
 
+
+def SomaDespesas(despesa_id):
+
+    despesa = Despesa.objects.all().filter(id=despesa_id)
+
+    despesaparcela = DespesaParcela.objects.all().filter(despesa_id=despesa_id)
+
+
+
+    totalItem = 0
+    for d in despesa:
+        mes = d.mes
+        valorTotal = (d.total)
+
+    for i in despesaparcela:
+        totalItem = totalItem + i.valor
+
+    retorno = 0
+
+    if valorTotal > 0:
+        if round(valorTotal) == round(totalItem):
+            retorno = 1
+        else:
+            retorno = 2
+
+    return retorno
 
 
 def AddDespesa( despesa_id):

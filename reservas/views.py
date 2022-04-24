@@ -9,7 +9,12 @@ from django.contrib import messages
 
 def calendario(request):
 
-    todas_reservas = Reserva.objects.all()
+
+    todas_reservas = Reserva.objects.raw(
+        '	SELECT id, data_final + 1 as data_final, data_inicio '
+        '		FROM reservas_reserva ')
+
+
 
     context = {
         "nome_pagina":"Calendario",
