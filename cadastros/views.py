@@ -61,6 +61,7 @@ def index2(request):
         "todas_reservas": todas_reservas,
         "todas_despesas": todas_despesas,
         "reservas": membros_qry,
+        "usuario": request.user,
 
     }
 

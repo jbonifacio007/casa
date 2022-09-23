@@ -11,7 +11,7 @@ from django.utils.html import format_html
 
 class DespesaItemInline(admin.TabularInline):
     model = models.DespesaItem
-    list_display = ['descricao','tipodespesa','valor']
+    list_display = ['descricao','tipodespesa','valor','gerar']
     exclude = ['usuario']
 #    readonly_fields = ('lote','cliente','corretor','valor','formapagamento','quitado','usuario','obs')
     extra = 0

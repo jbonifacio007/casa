@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block conteudo %}
+
+                    <div class="container-fluid">
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                            <h1 class="h3 mb-0 text-gray-800">{{ nome_pagina }}</h1>
+                        </div>
+
+                        <div class="container">
+                        		<form action="/consulta/" method="POST" name="frm_consulta" class="ml-3">{% csrf_token %}
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <input type="text" class="form-control col-md-5" name="consulta"
+                                            placeholder="Digite aqui a sua consulta">
+                                            <input type="text" class="form-control col-md-5" name="ano"
+                                            placeholder="Digite aqui o ano">
+
+                                            <select class="form-control col-md-2" name="campo">
+                                                <option value="nome">Nome</option>
+                                                <option value="idade">Idade</option>
+                                                <option value="sexo">Sexo</option>
+                                                <option value="salario">Salário</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-success">Consultar</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                        </div>
+                        
+
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
+                                <h6 class="m-0 font-weight-bold text-primary">Reservas</h6>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <th>Nome</th>
+                                            <th>Data Inicio</th>
+                                            <th>Data Final</th>
+                                            <th>Qtd Dias</th>
+                                            <th>Informações</th>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for reserva in reservas %}
+                                            <tr>
+                                                <td>{{ reserva.nome }}</td>
+                                                <td>{{ reserva.data_inicio }}</td>
+                                                <td>{{ reserva.data_final }}</td>
+                                                <td>{{ reserva.dias }}</td>
+                                                <td>
+                                                    <a href="#">
+                                                        Ver informações
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
+                                <h6 class="m-0 font-weight-bold text-primary">Relação de Membros</h6>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <th>Nome completo</th>
+                                            <th>CPF</th>
+                                            <th>Mais informações</th>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for visitante in todos_visitantes %}
+                                            <tr>
+                                                <td>{{ visitante.nome }}</td>
+                                                <td>{{ visitante.cpf }}</td>
+                                                <td>
+                                                    <a href="#">
+                                                        Ver informações
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-sm-flex align-items-center justify-content-between mb-4">
+                                <h6 class="m-0 font-weight-bold text-primary">Despesas</h6>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <th>Mês</th>
+                                            <th>Ano</th>
+                                            <th>Total</th>
+                                            <th>Mais informações</th>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for depesa in todas_despesas %}
+                                            <tr>
+                                                <td>{{ depesa.mes }}</td>
+                                                <td>{{ depesa.ano }}</td>
+                                                <td>{{ depesa.total }}</td>
+                                                <td>
+                                                    <a href="#">
+                                                        Ver informações
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+{% endblock conteudo %}

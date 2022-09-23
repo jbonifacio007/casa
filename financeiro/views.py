@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import Parcelamento,Membro,Despesa,DespesaItem
+from reservas.models import Reserva,ReservaDependente
 from django.db import connection
 import datetime
 from dateutil.relativedelta import *
-
+from django.views.decorators.csrf import csrf_protect
 
 from django.conf import settings
 # Create your views here.
@@ -111,6 +112,9 @@ def gerardespesaparcela(request, despesa_id):
         'group by id,nome,temporario order by dias desc')
 
     membros_aux = membros_qry
+
+
+
 
 
 
@@ -227,6 +231,86 @@ def gerardespesaparcela(request, despesa_id):
 
     return render(request, "geracaoparcela.html", context)
 
+
+
+def consultapagmes(request):
+
+    todos_visitantes = Membro.objects.raw('	SELECT * FROM cadastros_membro where temporario = False ')
+
+    todas_despesas = Despesa.objects.raw('SELECT id,mes,ano,total from financeiro_despesa order by ano,mes desc')
+
+    todas_reservas = Reserva.objects.all()
+
+    membros_qry = Membro.objects.raw(
+        '	SELECT m.id, m.nome,data_inicio,data_final,COALESCE((data_final - data_inicio),0) dias '
+        '		FROM cadastros_membro m '
+        '		inner join reservas_reserva r '
+        '       on r.membro_id = m.id '
+        '   where temporario = False '
+        '   order by data_inicio desc ')
+
+
+
+    context = {
+        "nome_pagina":"Início Dashboard",
+        "todos_visitantes": todos_visitantes,
+        "todas_reservas": todas_reservas,
+        "todas_despesas": todas_despesas,
+        "reservas": membros_qry,
+
+    }
+
+    return render(request,"consultapagmes.html",context)
+
+
+@csrf_protect
+def consulta(request):
+    consulta = request.POST.get('consulta')
+    campo = request.POST.get('campo')
+    ano = request.POST.get('ano')
+
+    todos_visitantes = Membro.objects.raw('	SELECT * FROM cadastros_membro where temporario = False ')
+
+
+
+    todas_despesas = Despesa.objects.raw('SELECT id,mes,ano,total from financeiro_despesa order by ano,mes desc')
+
+    todas_reservas = Reserva.objects.all()
+
+    membros_qry = Membro.objects.raw(
+        '	SELECT m.id, m.nome,data_inicio,data_final,COALESCE((data_final - data_inicio),0) dias '
+        '		FROM cadastros_membro m '
+        '		inner join reservas_reserva r '
+        '       on r.membro_id = m.id '
+        '   where temporario = False '
+        '   order by data_inicio desc ')
+
+
+
+    if campo == 'nome':
+        pessoas = Membro.objects.raw('	SELECT * FROM cadastros_membro where temporario = False ')
+    elif campo == 'idade':
+        todos_visitantes = Membro.objects.filter(nome__contains=consulta)
+    elif campo == 'sexo':
+        pessoas = Membro.objects.filter(sexo__contains=consulta)
+    elif campo == 'salario':
+        if consulta.find(',') > 0 or consulta.find('.') > 0:
+            consulta = float(consulta.replace(',', '.'))
+        pessoas = Membro.objects.filter(salario__contains=consulta)
+
+    titulo = 'Listagem de Pessoas'
+
+    context = {
+        "nome_pagina":"Início Dashboard",
+        "todos_visitantes": todos_visitantes,
+        "todas_reservas": todas_reservas,
+        "todas_despesas": todas_despesas,
+        "reservas": membros_qry,
+
+    }
+
+
+    return render(request, 'consultapagmes.html', context)
 
 def fazBackupProva(self, materia_id, user_id, usuario, nome_materia):
     with connection.cursor() as cursor:

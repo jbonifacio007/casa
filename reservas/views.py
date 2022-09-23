@@ -35,6 +35,7 @@ def incluir_reserva(request):
             visitante = form.save(commit=False)
 
   #          visitante.registrado_por = request.user.porteiro
+            visitante.usuario = request.user
             visitante.save()
 
             messages.success(
@@ -51,6 +52,7 @@ def incluir_reserva(request):
         "nome_pagina":"Incluir Reserva",
         "form": form,
         "todos_visitantes": todos_visitantes,
+        "usuario": request.user.username,
 
     }
 
