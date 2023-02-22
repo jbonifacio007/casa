@@ -6,6 +6,8 @@ from django.db import connection
 import datetime
 from dateutil.relativedelta import *
 from django.views.decorators.csrf import csrf_protect
+from decimal import Decimal
+
 
 from django.conf import settings
 # Create your views here.
@@ -16,6 +18,7 @@ from django.conf import settings
 
 def gerarparcela(request, parcelamento_id):
 
+    qtd_membros = Membro.objects.all().filter(temporario=False).count()
     membros = Membro.objects.all().filter(temporario=False)
     parcelamento = Parcelamento.objects.all().filter(id=parcelamento_id)
 
@@ -24,8 +27,13 @@ def gerarparcela(request, parcelamento_id):
         valor = (p.valor)
         vencimento = (p.vencimento)
         descricao = p.descricao
+        qtd_parcelas =  p.quantidade
 
-    valor = (valor / 10)
+
+    valor = (valor / qtd_parcelas)
+
+
+    valor = (valor / qtd_membros)
 
     numero_parcela = 0
 
@@ -90,7 +98,7 @@ def gerardespesaparcela(request, despesa_id):
 
 
     valorTotalFinal = valorTotal
-    valorTotal = valorTotal - valorVar
+    valorTotal = Decimal(valorTotal) - Decimal(valorVar)
 
 
     totalvalorVar = valorVar
@@ -201,7 +209,7 @@ def gerardespesaparcela(request, despesa_id):
             valorfinal = ((totalvalorVar - total_valor_parcela) / (quant_membros - qtd_membros_dias))
 
 
-        valorfinal = valorfinal + valor
+        valorfinal = Decimal(valorfinal) + Decimal(valor)
 
         if valorfinal < 0:
             valorfinal = 0
